@@ -25,17 +25,26 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+/*//A hack that doesnt work to check if the date is valid....
+const isNotValidDate = (date) => {
+  return date instanceof Date && !isNaN(date);
+}*/
+
 /*Using https://www.epochconverter.com/ as a reference for the math and understanding epoch time.*/
 app.get("/api/timestamp/:date",((req, res) => {
-  let date; // initialize the variable
+  let date = req.params.date; // initialize the variable
+
+  /*if (isNotValidDate(date)) return res.json({error: "Invalid Date"});*/ // a hack that doesnt work...
 
   //We need to check what format the input is in. Convert to int and then set the variable to a date type. ELSE just use as is.
-  if (Date.parse(req.params.date).toString() === "NaN") { // If the format is already in unix (Ie. 1451001600000)
-    date = new Date(parseInt(req.params.date));
-    console.log(req.params.date)
-  } else { // if the format is in YYYY-MM-DD
-    date = new Date(req.params.date);
+  if (Date.parse(date).toString() === "NaN") { // If the format is already in unix (Ie. 1451001600000)
+    date = new Date(parseInt(date));
+    /**Notes: the Date object returns an error if cast the variable correctly..*/
+
+  } else if (Date.parse(date)) { // if the format is in YYYY-MM-DD
+    date = new Date(date);
   }
+
   res.json({unix: date.getTime(), utc: date.toGMTString()})
   //For some reason to GMTString errors "Unresolved function or method toGMTString()" in Webstorm
 
