@@ -4,6 +4,7 @@
 // init project
 var express = require('express');
 var app = express();
+require('dotenv').config();
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC 
@@ -19,11 +20,51 @@ app.get("/", function (req, res) {
 });
 
 
-// your first API endpoint... 
+// your first API endpoint...
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+/*Using https://www.epochconverter.com/ as a reference for the math and understanding epoch time.*/
+app.get("/api/timestamp/:date",((req, res) => {
+  let date; // initialize the variable
+
+  //We need to check what format the input is in. Convert to int and then set the variable to a date type. ELSE just use as is.
+  if (Date.parse(req.params.date).toString() === "NaN") { // If the format is already in unix (Ie. 1451001600000)
+    date = new Date(parseInt(req.params.date));
+    console.log(req.params.date)
+  } else { // if the format is in YYYY-MM-DD
+    date = new Date(req.params.date);
+  }
+  res.json({unix: date.getTime(), utc: date.toGMTString()})
+  //For some reason to GMTString errors "Unresolved function or method toGMTString()" in Webstorm
+
+  /**Trial and error below...*/
+
+  /*if date.parse != "NaN" (ie 2000-10-14), then print out json
+    else parseInt(date) -> date.parse console log*/
+
+
+  // res.send(Date.parse("971481600000"));
+
+  // var date = new Date(parseInt("2000-10-14")); //req.params.date    "2000-10-14"//returns unix   971481600000// returns nan
+  //
+  // res.send(String(date.getTime()));
+
+  /*date = new Date(req.params.date*1000);
+  if (req.params.date = date.getTime()/1000) {
+    res.send("TRUE");
+  } else {
+    res.send("FALSE");
+  };*/
+  // if (!(date.getTime().toString() === "NaN")) { // IF UNIX Time
+  //   res.json({unix: date.getTime(), utc: date.toGMTString()})
+  // } else {
+  //   date = new Date(req.params.date);
+  //   res.json({unix: date.getTime(), utc: date.toGMTString()})
+  // }
+  /*res.json({unix: new Date(req.params.date).getTime(), utc: date.});*/
+}));
 
 
 // listen for requests :)
