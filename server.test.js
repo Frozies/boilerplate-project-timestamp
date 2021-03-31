@@ -18,11 +18,11 @@ describe('Test a date with the timestamp API', () => {
         request(app)
             .get("/api/timestamp/2015-12-25")
             .then(response => {
-                console.log(response);
                 expect(response.body).toStrictEqual({"unix":1451001600000, "utc":"Fri, 25 Dec 2015 00:00:00 GMT"});
                 done();
             })
     });
+
     test("Input: 1451001600000", done => {
         request(app)
             .get("/api/timestamp/1451001600000")
@@ -31,6 +31,7 @@ describe('Test a date with the timestamp API', () => {
                 done();
             })
     })
+
     test("Input: dd", done => {
         request(app)
             .get("/api/timestamp/dd")

@@ -30,6 +30,11 @@ const isNotValidDate = (date) => {
   return date instanceof Date && !isNaN(date);
 }*/
 
+app.get("/api/timestamp", (req, res) => {
+  let date = new Date();
+  res.json({unix: date.getTime(), utc: date.toGMTString()});
+});
+
 /*Using https://www.epochconverter.com/ as a reference for the math and understanding epoch time.*/
 app.get("/api/timestamp/:date",((req, res) => {
   let date = req.params.date; // initialize the variable
