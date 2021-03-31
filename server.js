@@ -35,7 +35,7 @@ app.get("/api/timestamp/:date",((req, res) => {
   let date = req.params.date; // initialize the variable
 
   /*if (isNotValidDate(date)) return res.json({error: "Invalid Date"});*/ // a hack that doesnt work...
-
+  console.log("DD: " + date);
   //We need to check what format the input is in. Convert to int and then set the variable to a date type. ELSE just use as is.
   if (Date.parse(date).toString() === "NaN") { // If the format is already in unix (Ie. 1451001600000)
     date = new Date(parseInt(date));
@@ -45,7 +45,11 @@ app.get("/api/timestamp/:date",((req, res) => {
     date = new Date(date);
   }
 
-  res.json({unix: date.getTime(), utc: date.toGMTString()})
+  if (date.toString() === "Invalid Date"){
+    res.json({error: "Invalid Date"});
+  }else {
+    res.json({unix: date.getTime(), utc: date.toGMTString()});
+  }
   //For some reason to GMTString errors "Unresolved function or method toGMTString()" in Webstorm
 
   /**Trial and error below...*/
@@ -75,8 +79,9 @@ app.get("/api/timestamp/:date",((req, res) => {
   /*res.json({unix: new Date(req.params.date).getTime(), utc: date.});*/
 }));
 
-
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+
+module.exports = app;
